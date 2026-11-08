@@ -8,7 +8,7 @@ This study, conducted as a part of the BlueDot Impact Technical AI Safety Projec
 2. **Chain-of-thought monitoring.** A slice of the main experiment re-run with the model's reasoning saved.
 3. **J-lens.** A look inside the model with the J-lens tool: which concepts are active when the model reads the request, and do they differ between AI researchers and the general population?
 
-📄 **Write-up:** [Safe for Whom? User Awareness and its Implications for LLM Safety Evaluation]([https://katrinagallacher.github.io/user-awareness-qwen/](https://medium.com/@solidgoldmagikarp/safe-for-whom-user-awareness-and-its-implications-for-llm-safety-evaluation-e3dffa55baa7))
+📄 **Write-up:** [Safe for Whom? User Awareness and its Implications for LLM Safety Evaluation](https://medium.com/@solidgoldmagikarp/safe-for-whom-user-awareness-and-its-implications-for-llm-safety-evaluation-e3dffa55baa7)
 
 ## Main findings
 
