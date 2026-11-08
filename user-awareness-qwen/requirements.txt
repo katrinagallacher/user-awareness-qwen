@@ -1,6 +1,0 @@
-# Parts 1 and 2 (API calls only, no GPU)
-openai
-pandas
-numpy
-scipy>=1.11
-matplotlib
