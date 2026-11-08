@@ -1,0 +1,5 @@
+# Part 3 (needs a GPU with ~80 GB, e.g. an A100 80GB) and make_control_prompts.py
+-r requirements.txt
+torch
+transformers>=5.5
+jlens @ git+https://github.com/anthropics/jacobian-lens.git
