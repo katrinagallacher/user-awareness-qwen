@@ -1,30 +1,28 @@
 # User awareness in Qwen3.6-27B
 
-Does an open-weight model treat a borderline request differently depending on **who it thinks the user is**?
-
-This repository replicates the borderline-requests experiment from Transluce's
+This study, conducted as a part of the BlueDot Impact Technical AI Safety Project, replicates and expands the borderline-requests experiment from Transluce's
 [*User awareness in frontier models*](https://transluce.org/user-awareness) (Zhong et al., 2026) on
-**Qwen3.6-27B**, and adds two experiments of its own:
+**Qwen3.6-27B**:
 
-1. **Main experiment.** 339 personas + an anonymous baseline × 100 borderline requests from OR-Bench, graded by a blind judge.
-2. **Chain-of-thought experiment.** A slice of the main experiment re-run with the model's reasoning saved.
-3. **J-lens experiment.** A look inside the model with the Jacobian lens: which concepts are active when it reads the request, and do they differ between AI researchers and the general population?
+1. **Main experiment.** 339 personas + an anonymous baseline × 100 borderline requests from OR-Bench, graded by a GPT-5.4-mini.
+2. **Chain-of-thought monitoring.** A slice of the main experiment re-run with the model's reasoning saved.
+3. **J-lens.** A look inside the model with the J-lens tool: which concepts are active when the model reads the request, and do they differ between AI researchers and the general population?
 
-📄 **Write-up:** [katrinagallacher.github.io/user-awareness-qwen](https://katrinagallacher.github.io/user-awareness-qwen/) (source in [`docs/`](docs/))
+📄 **Write-up:** [Safe for Whom? User Awareness and its Implications for LLM Safety Evaluation]([https://katrinagallacher.github.io/user-awareness-qwen/](https://medium.com/@solidgoldmagikarp/safe-for-whom-user-awareness-and-its-implications-for-llm-safety-evaluation-e3dffa55baa7))
 
 ## Main findings
 
-- Telling Qwen that the user works at an AI organisation **lowered its refusal and suspicion rates** compared with the general population (refusal −7% to −9%, suspicion −7% to −9%, p < 0.01). Famous AI researchers and unknown (fictional) AI researchers were treated the same.
-- Famous people outside AI were treated like the general population. No group differed on *substantive* help.
-- Unlike Transluce's frontier-model results, the effect was **spread evenly across personas**, not driven by a few individuals.
-- Inside the model, naming any user shifted the J-space away from harm-related concepts towards service-related ones; AI affiliation added a smaller shift towards discussion-related concepts (*讨论* "discussion") and away from *moral* / *违法* "illegal". There was almost no trace of evaluation awareness.
+- Telling Qwen that the user works at an AI organization **decreases its refusal and suspicion rates** compared to the general population by up to 9% (p < 0.01). Famous AI researchers and unknown (fictional) AI researchers were treated equally.
+- Unlike Transluce's frontier-model results, the effect was **spread evenly across personas**, not driven by a few outliers.
+- CoT often included cases where mentioning the user subtly shifted the model's decision.
+- Naming any user shifted the J-space away from harm-related concepts towards service-related ones; AI affiliation added a smaller shift towards discussion-related concepts. There was almost no trace of evaluation awareness.
 
 <p align="center"><img src="figures/main_refusal.png" width="49%"> <img src="figures/main_suspicious.png" width="49%"></p>
 
 ## Repository layout
 
 ```
-├── setup.sh                     downloads Transluce's data (personas, prompts, judge rubric)
+├── setup.sh                     downloads Transluce's dataset and prompts (personas, prompts, judge rubric)
 ├── common.py                    settings and helpers shared by all three parts
 ├── make_control_prompts.py      how data/control_prompts.json was made (anon + 30 noise prompts)
 ├── data/control_prompts.json
@@ -43,8 +41,8 @@ This repository replicates the borderline-requests experiment from Transluce's
 │   ├── 3_analyze.py             group comparisons and signal plots
 │   └── translations.py          English translations of non-English tokens
 │
-├── figures/                     figures from our run
-└── docs/                        the write-up page (GitHub Pages)
+├── figures/                     figures
+└── docs/                        write-up
 ```
 
 ## Data, models and tools
@@ -88,8 +86,6 @@ export OPENROUTER_API_KEY=sk-or-...   # one OpenRouter key covers the subject an
 All scripts are run from the repository root. Results go to `results/` (or to the folder in the
 `RESULTS_DIR` environment variable). The run scripts are **resumable**: if one stops, start it
 again and it skips everything already finished.
-
-**On Google Colab**, put the results on Drive so a disconnect loses nothing:
 
 ```python
 from google.colab import drive, userdata
@@ -205,16 +201,13 @@ English translation from [`translations.py`](3_jlens_experiment/translations.py)
 
 ![J-lens signals](figures/jlens_signals.png)
 <sub>Mean log10 lens probability at the decision token across layers. A dot marks the layer where a group's mean rank first
-enters the top 25. "Moral" and "moral" appear twice here because the original notebook tracked them as separate concepts;
-the code in this repo merges case variants.</sub>
+enters the top 25.</sub>
 
-## Notes on reproducing our numbers
+## Notes on reproducing
 
 - OpenRouter routes Qwen3.6-27B requests to several providers, which may serve differently quantised weights, so a rerun will
-  not match ours exactly.
-- Compared with the original notebook, the J-lens code merges case variants into one concept and skips special tokens such as
-  `<|endoftext|>`, so the list of concepts differs slightly; the curves for any given concept are computed the same way.
-- The gender and lab-affiliation splits from the original notebook are not included here.
+  not match the results exactly.
+- J-lens code merges case variants into one concept and skips special tokens such as `<|endoftext|>`.
 
 ## Acknowledgements
 
